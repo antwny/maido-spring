@@ -163,3 +163,4 @@ PENDIENTE → EN_PREPARACION → EN_CAMINO → ENTREGADO
 | 2026-07-22 | Backend completo: entidades, repos, servicios, controllers, config, seed |
 | 2026-07-22 | Frontend Angular 19 completo: diseño Nikkei, todos los módulos público y admin, lazy loading, guards, carrito reactivo |
 | 2026-07-22 | Flujo UX mejorado: redirección inteligente (Carrito → Login → Registro → Checkout) y autocompletado de dirección |
+| 2026-07-23 | Corrección URL de imágenes (backend absolutas + frontend fallback) y mejora de copy UX en el carrito |

@@ -58,7 +58,7 @@ import { CartItem } from '../../../core/models/models';
               <span class="price" style="font-size:1.3rem">S/ {{ total | number:'1.2-2' }}</span>
             </div>
             <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:1.5rem" (click)="proceedToCheckout()">
-              Proceder al Checkout →
+              Completar mi pedido →
             </button>
             <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:0.75rem" (click)="clearCart()">
               Vaciar carrito

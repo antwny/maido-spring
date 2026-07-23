@@ -12,8 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.Optional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +75,10 @@ public class PlatilloServiceImpl implements PlatilloService {
             String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path filePath = dirPath.resolve(filename);
             Files.copy(file.getInputStream(), filePath);
-            return "/uploads/" + filename;
+            return ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/uploads/")
+                    .path(filename)
+                    .toUriString();
         } catch (IOException e) {
             throw new RuntimeException("Error al subir la imagen: " + e.getMessage());
         }
