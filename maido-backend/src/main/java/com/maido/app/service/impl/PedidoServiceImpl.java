@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
@@ -74,6 +76,12 @@ public class PedidoServiceImpl implements PedidoService {
     public List<PedidoResponse> listarTodos() {
         return pedidoRepository.findAllByOrderByFechaPedidoDesc()
                 .stream().map(this::mapToResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<PedidoResponse> listarTodosPaginado(Pageable pageable) {
+        return pedidoRepository.findAllByOrderByFechaPedidoDesc(pageable)
+                .map(this::mapToResponse);
     }
 
     @Override

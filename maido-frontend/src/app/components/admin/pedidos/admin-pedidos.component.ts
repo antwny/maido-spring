@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PedidoService } from '../../../core/services/pedido.service';
 import { ToastService } from '../../../core/services/toast.service';
-import { PedidoResponse } from '../../../core/models/models';
+import { PedidoResponse, Page } from '../../../core/models/models';
 
 @Component({
   selector: 'app-admin-pedidos',
@@ -17,10 +17,10 @@ import { PedidoResponse } from '../../../core/models/models';
       <!-- Filtros -->
       <div class="filters-row">
         <select class="form-input" style="max-width:200px" [(ngModel)]="estadoFilter" (ngModelChange)="applyFilter()">
-          <option value="">Todos los estados</option>
+          <option value="">Todos los estados (esta página)</option>
           <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
         </select>
-        <span class="text-muted">{{ pedidosFiltrados.length }} pedidos</span>
+        <span class="text-muted">{{ totalElements }} pedidos en total</span>
       </div>
 
       <div *ngIf="loading" class="spinner"></div>
@@ -49,6 +49,13 @@ import { PedidoResponse } from '../../../core/models/models';
           </tbody>
         </table>
       </div>
+
+      <!-- Paginación -->
+      <div style="display:flex;justify-content:center;align-items:center;gap:1rem;margin-top:1.5rem" *ngIf="!loading">
+        <button class="btn btn-secondary" [disabled]="page === 0" (click)="prevPage()">Anterior</button>
+        <span class="text-muted">Página {{ page + 1 }} de {{ totalPages || 1 }}</span>
+        <button class="btn btn-secondary" [disabled]="page >= totalPages - 1" (click)="nextPage()">Siguiente</button>
+      </div>
     </div>
   `,
   styles: [`
@@ -61,15 +68,46 @@ export class AdminPedidosComponent implements OnInit {
   estadoFilter = '';
   loading = true;
   estados = ['PENDIENTE', 'EN_PREPARACION', 'EN_CAMINO', 'ENTREGADO', 'CANCELADO'];
+  
+  // Paginación
+  page = 0;
+  size = 10;
+  totalPages = 0;
+  totalElements = 0;
 
   private pedidoSvc = inject(PedidoService);
   private toast = inject(ToastService);
 
   ngOnInit(): void {
-    this.pedidoSvc.getAll().subscribe({
-      next: (p: PedidoResponse[]) => { this.pedidos = p; this.pedidosFiltrados = p; this.loading = false; },
+    this.load();
+  }
+
+  load(): void {
+    this.loading = true;
+    this.pedidoSvc.getPage(this.page, this.size).subscribe({
+      next: (res: Page<PedidoResponse>) => { 
+        this.pedidos = res.content; 
+        this.totalPages = res.totalPages;
+        this.totalElements = res.totalElements;
+        this.applyFilter(); 
+        this.loading = false; 
+      },
       error: (err: any) => this.loading = false
     });
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages - 1) {
+      this.page++;
+      this.load();
+    }
+  }
+
+  prevPage(): void {
+    if (this.page > 0) {
+      this.page--;
+      this.load();
+    }
   }
 
   applyFilter(): void {

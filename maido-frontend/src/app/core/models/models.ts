@@ -90,3 +90,11 @@ export interface CartItem {
   platillo: Platillo;
   cantidad: number;
 }
+
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}

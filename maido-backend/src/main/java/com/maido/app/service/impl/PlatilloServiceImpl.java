@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Optional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,11 @@ public class PlatilloServiceImpl implements PlatilloService {
     @Override
     public List<Platillo> listarTodos() {
         return platilloRepository.findByActivoTrue();
+    }
+
+    @Override
+    public Page<Platillo> listarTodosPaginado(Pageable pageable) {
+        return platilloRepository.findByActivoTrue(pageable);
     }
 
     @Override

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,13 @@ public class PedidoController {
             return ResponseEntity.ok(pedidoService.listarPorRangoDeFecha(inicio, fin));
         }
         return ResponseEntity.ok(pedidoService.listarTodos());
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<PedidoResponse>> listarPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(pedidoService.listarTodosPaginado(PageRequest.of(page, size)));
     }
 
     @GetMapping("/{id}")

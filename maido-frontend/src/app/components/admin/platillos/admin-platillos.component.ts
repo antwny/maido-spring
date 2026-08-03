@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { PlatilloService } from '../../../core/services/platillo.service';
 import { CategoriaService } from '../../../core/services/categoria.service';
 import { ToastService } from '../../../core/services/toast.service';
-import { Platillo, Categoria } from '../../../core/models/models';
+import { Platillo, Categoria, Page } from '../../../core/models/models';
 
 @Component({
   selector: 'app-admin-platillos',
@@ -15,7 +15,7 @@ import { Platillo, Categoria } from '../../../core/models/models';
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
         <div>
           <h1 style="margin-bottom:0.25rem">Gestión de <span class="text-accent">Platillos</span></h1>
-          <p class="text-muted">{{ platillos.length }} platillos en el menú</p>
+          <p class="text-muted">{{ totalElements }} platillos en total</p>
         </div>
         <button class="btn btn-primary" (click)="openModal()">+ Nuevo Platillo</button>
       </div>
@@ -44,6 +44,13 @@ import { Platillo, Categoria } from '../../../core/models/models';
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Paginación -->
+      <div style="display:flex;justify-content:center;align-items:center;gap:1rem;margin-top:1.5rem">
+        <button class="btn btn-secondary" [disabled]="page === 0" (click)="prevPage()">Anterior</button>
+        <span class="text-muted">Página {{ page + 1 }} de {{ totalPages || 1 }}</span>
+        <button class="btn btn-secondary" [disabled]="page >= totalPages - 1" (click)="nextPage()">Siguiente</button>
       </div>
 
       <!-- MODAL -->
@@ -110,6 +117,12 @@ export class AdminPlatillosComponent implements OnInit {
 
   platillos: Platillo[] = [];
   categorias: Categoria[] = [];
+  
+  // Paginación
+  page = 0;
+  size = 10;
+  totalPages = 0;
+  totalElements = 0;
   showModal = false;
   editMode = false;
   editId: number | null = null;
@@ -131,7 +144,27 @@ export class AdminPlatillosComponent implements OnInit {
   }
 
   load(): void {
-    this.platilloSvc.getAll().subscribe((p: Platillo[]) => this.platillos = p);
+    this.platilloSvc.getPage(this.page, this.size).subscribe({
+      next: (res: Page<Platillo>) => {
+        this.platillos = res.content;
+        this.totalPages = res.totalPages;
+        this.totalElements = res.totalElements;
+      }
+    });
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages - 1) {
+      this.page++;
+      this.load();
+    }
+  }
+
+  prevPage(): void {
+    if (this.page > 0) {
+      this.page--;
+      this.load();
+    }
   }
 
   openModal(p?: Platillo): void {

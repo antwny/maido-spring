@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -34,6 +36,13 @@ public class PlatilloController {
             return ResponseEntity.ok(platilloService.buscarPorNombre(nombre));
         }
         return ResponseEntity.ok(platilloService.listarTodos());
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<Platillo>> listarPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(platilloService.listarTodosPaginado(PageRequest.of(page, size)));
     }
 
     @GetMapping("/{id}")

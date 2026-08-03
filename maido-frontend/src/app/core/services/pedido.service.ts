@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PedidoRequest, PedidoResponse } from '../models/models';
+import { PedidoRequest, PedidoResponse, Page } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class PedidoService {
@@ -20,6 +20,11 @@ export class PedidoService {
     if (params?.inicio)    p = p.set('inicio', params.inicio);
     if (params?.fin)       p = p.set('fin', params.fin);
     return this.http.get<PedidoResponse[]>(this.base, { params: p });
+  }
+
+  getPage(page: number, size: number): Observable<Page<PedidoResponse>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<Page<PedidoResponse>>(`${this.base}/page`, { params });
   }
 
   getById(id: number): Observable<PedidoResponse> {

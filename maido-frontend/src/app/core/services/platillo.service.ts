@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Platillo } from '../models/models';
+import { Platillo, Page } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class PlatilloService {
@@ -14,6 +14,11 @@ export class PlatilloService {
     if (categoriaId) params = params.set('categoriaId', categoriaId);
     if (nombre) params = params.set('nombre', nombre);
     return this.http.get<Platillo[]>(this.base, { params });
+  }
+
+  getPage(page: number, size: number): Observable<Page<Platillo>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<Page<Platillo>>(`${this.base}/page`, { params });
   }
 
   getById(id: number): Observable<Platillo> {
