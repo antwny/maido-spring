@@ -2,6 +2,7 @@ package com.maido.app.controller;
 
 import com.maido.app.entity.Categoria;
 import com.maido.app.entity.Platillo;
+import com.maido.app.exception.ResourceNotFoundException;
 import com.maido.app.service.CategoriaService;
 import com.maido.app.service.PlatilloService;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,7 @@ public class PlatilloController {
             @RequestParam(required = false) MultipartFile imagen) {
 
         Categoria categoria = categoriaService.obtenerPorId(categoriaId)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría", categoriaId));
 
         String imagenUrl = null;
         if (imagen != null && !imagen.isEmpty()) {
@@ -85,7 +86,7 @@ public class PlatilloController {
             @RequestParam(required = false) MultipartFile imagen) {
 
         Categoria categoria = categoriaService.obtenerPorId(categoriaId)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría", categoriaId));
 
         String imagenUrl = null;
         if (imagen != null && !imagen.isEmpty()) {
@@ -101,20 +102,12 @@ public class PlatilloController {
                 .imagenUrl(imagenUrl)
                 .build();
 
-        try {
-            return ResponseEntity.ok(platilloService.actualizar(id, datos));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(platilloService.actualizar(id, datos));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Platillo> actualizarConJson(@PathVariable Long id, @RequestBody Platillo platillo) {
-        try {
-            return ResponseEntity.ok(platilloService.actualizar(id, platillo));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(platilloService.actualizar(id, platillo));
     }
 
     @DeleteMapping("/{id}")

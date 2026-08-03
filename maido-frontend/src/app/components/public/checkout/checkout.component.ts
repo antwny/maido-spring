@@ -218,7 +218,7 @@ export class CheckoutComponent implements OnInit {
         this.cart.clear();
         this.toast.success(`Pedido #${res.id} confirmado exitosamente`);
       },
-      error: (err: any) => { this.loading = false; this.toast.error('Error al procesar el pedido'); }
+      error: (err: any) => { this.loading = false; this.toast.error(err?.error?.mensaje || 'Error al procesar el pedido'); }
     });
   }
 

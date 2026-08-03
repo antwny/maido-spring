@@ -169,7 +169,7 @@ export class AdminPlatillosComponent implements OnInit {
 
     obs.subscribe({
       next: (res: any) => { this.saving = false; this.closeModal(); this.load(); this.toast.success(this.editMode ? 'Platillo actualizado' : 'Platillo creado'); },
-      error: (err: any) => { this.saving = false; this.toast.error('Error al guardar'); }
+      error: (err: any) => { this.saving = false; this.toast.error(err?.error?.mensaje || 'Error al guardar'); }
     });
   }
 
@@ -177,7 +177,7 @@ export class AdminPlatillosComponent implements OnInit {
     if (!confirm(`¿Eliminar "${p.nombre}"?`)) return;
     this.platilloSvc.delete(p.id!).subscribe({
       next: (res: any) => { this.load(); this.toast.success('Platillo eliminado'); },
-      error: (err: any) => this.toast.error('Error al eliminar')
+      error: (err: any) => this.toast.error(err?.error?.mensaje || 'Error al eliminar')
     });
   }
 }

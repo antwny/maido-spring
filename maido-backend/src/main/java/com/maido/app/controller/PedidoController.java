@@ -45,11 +45,7 @@ public class PedidoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PedidoResponse> obtenerPorId(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(pedidoService.obtenerPorId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(pedidoService.obtenerPorId(id));
     }
 
     @PutMapping("/{id}/estado")
@@ -57,10 +53,6 @@ public class PedidoController {
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {
         String estado = body.get("estado");
-        try {
-            return ResponseEntity.ok(pedidoService.cambiarEstado(id, estado));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(pedidoService.cambiarEstado(id, estado));
     }
 }

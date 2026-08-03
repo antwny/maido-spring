@@ -1,6 +1,7 @@
 package com.maido.app.service.impl;
 
 import com.maido.app.entity.Categoria;
+import com.maido.app.exception.ResourceNotFoundException;
 import com.maido.app.repository.CategoriaRepository;
 import com.maido.app.service.CategoriaService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class CategoriaServiceImpl implements CategoriaService {
             c.setDescripcion(categoriaActualizada.getDescripcion());
             c.setActivo(categoriaActualizada.getActivo());
             return categoriaRepository.save(c);
-        }).orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + id));
+        }).orElseThrow(() -> new ResourceNotFoundException("Categoría", id));
     }
 
     @Override

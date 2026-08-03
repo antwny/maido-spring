@@ -39,6 +39,12 @@ maido-backend/src/main/java/com/maido/app/
 │   ├── WebConfig.java           ← Sirve /uploads/** estático
 │   └── DataInitializer.java     ← Seed BD (admin + categorías + platillos)
 ├── entity/     Usuario, Categoria, Platillo, Pedido, DetallePedido
+├── exception/
+│   ├── GlobalExceptionHandler.java ← @RestControllerAdvice centralizado
+│   ├── ErrorResponse.java          ← DTO unificado de errores
+│   ├── ResourceNotFoundException   ← 404 Not Found
+│   ├── BusinessException           ← 400 Bad Request
+│   └── FileUploadException         ← 500 (subida de archivos)
 ├── repository/ UsuarioRepository, CategoriaRepository, PlatilloRepository, PedidoRepository
 ├── service/    Interfaces + impl/ (Auth, Categoria, Platillo, Pedido)
 ├── controller/ AuthController, CategoriaController, PlatilloController, PedidoController
@@ -165,3 +171,7 @@ PENDIENTE → EN_PREPARACION → EN_CAMINO → ENTREGADO
 | 2026-07-22 | Flujo UX mejorado: redirección inteligente (Carrito → Login → Registro → Checkout) y autocompletado de dirección |
 | 2026-07-23 | Corrección URL de imágenes (backend absolutas + frontend fallback) y mejora de copy UX en el carrito |
 | 2026-07-23 | Simulación de Métodos de Pago en el Checkout (Efectivo, POS, Tarjeta) con formulario dinámico y registro en notas del pedido |
+| 2026-08-03 | Paquete `exception` con GlobalExceptionHandler (@RestControllerAdvice), excepciones personalizadas (ResourceNotFoundException, BusinessException, FileUploadException), ErrorResponse unificado, limpieza de try/catch en controllers, y frontend actualizado para mostrar mensajes del backend |
+| 2026-08-03 | Animaciones de ruta (Page Transitions): fade+slide suave entre páginas con Angular Animations, provideAnimationsAsync, y ChildrenOutletContexts |
+| 2026-08-03 | Rediseño completo de Mis Pedidos: timeline visual de progreso, accordion expandible, filtros por estado, badge de método de pago, observaciones visibles, y empty state mejorado |
+| 2026-08-03 | Generación de Reportes PDF con JasperReports en el backend: plantilla JRXML con estética Maido (colores dorados/oscuros), endpoint `/exportar-pdf`, y botón en el frontend para descargar el documento con el resumen y listado de pedidos |

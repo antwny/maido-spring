@@ -3,6 +3,7 @@ package com.maido.app.service.impl;
 import com.maido.app.dto.PedidoRequest;
 import com.maido.app.dto.PedidoResponse;
 import com.maido.app.entity.DetallePedido;
+import com.maido.app.exception.ResourceNotFoundException;
 import com.maido.app.entity.Pedido;
 import com.maido.app.entity.Platillo;
 import com.maido.app.entity.Usuario;
@@ -31,7 +32,7 @@ public class PedidoServiceImpl implements PedidoService {
     @Transactional
     public PedidoResponse crearPedido(PedidoRequest request) {
         Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + request.getUsuarioId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario", request.getUsuarioId()));
 
         Pedido pedido = Pedido.builder()
                 .usuario(usuario)
@@ -47,7 +48,7 @@ public class PedidoServiceImpl implements PedidoService {
 
         for (PedidoRequest.DetallePedidoRequest dr : request.getDetalles()) {
             Platillo platillo = platilloRepository.findById(dr.getPlatilloId())
-                    .orElseThrow(() -> new RuntimeException("Platillo no encontrado: " + dr.getPlatilloId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Platillo", dr.getPlatilloId()));
 
             BigDecimal subtotal = dr.getPrecioUnitario().multiply(BigDecimal.valueOf(dr.getCantidad()));
             total = total.add(subtotal);
@@ -97,7 +98,7 @@ public class PedidoServiceImpl implements PedidoService {
     @Transactional
     public PedidoResponse cambiarEstado(Long id, String estado) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido", id));
         pedido.setEstado(estado);
         return mapToResponse(pedidoRepository.save(pedido));
     }
@@ -106,7 +107,7 @@ public class PedidoServiceImpl implements PedidoService {
     public PedidoResponse obtenerPorId(Long id) {
         return pedidoRepository.findById(id)
                 .map(this::mapToResponse)
-                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido", id));
     }
 
     private PedidoResponse mapToResponse(Pedido pedido) {

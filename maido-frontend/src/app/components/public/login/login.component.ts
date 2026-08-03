@@ -110,7 +110,7 @@ export class LoginComponent {
           this.errorMsg = res.mensaje;
         }
       },
-      error: (err: any) => { this.loading = false; this.errorMsg = 'Error de conexión con el servidor'; }
+      error: (err: any) => { this.loading = false; this.errorMsg = err?.error?.mensaje || 'Error de conexión con el servidor'; }
     });
   }
 

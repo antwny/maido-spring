@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PedidoService } from '../../../core/services/pedido.service';
 import { PedidoResponse } from '../../../core/models/models';
+import { HttpClient } from '@angular/common/http';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-admin-reportes',
@@ -26,6 +28,9 @@ import { PedidoResponse } from '../../../core/models/models';
           </div>
           <button class="btn btn-primary" (click)="buscar()" [disabled]="loading">
             {{ loading ? '...' : '🔍 Buscar' }}
+          </button>
+          <button class="btn btn-secondary" style="margin-left:0.5rem" (click)="exportarPdf()" [disabled]="!searched || loadingPdf">
+            {{ loadingPdf ? '...' : '📄 PDF' }}
           </button>
         </div>
       </div>
@@ -86,7 +91,11 @@ export class AdminReportesComponent {
   loading = false;
   ingresos = 0; entregados = 0; cancelados = 0;
 
+  loadingPdf = false;
+
   private pedidoSvc = inject(PedidoService);
+  private http = inject(HttpClient);
+  private toast = inject(ToastService);
 
   buscar(): void {
     if (!this.fechaInicio || !this.fechaFin) return;
@@ -101,6 +110,33 @@ export class AdminReportesComponent {
         this.cancelados = p.filter(x => x.estado === 'CANCELADO').length;
       },
       error: (err: any) => this.loading = false
+    });
+  }
+
+  exportarPdf(): void {
+    if (!this.fechaInicio || !this.fechaFin) return;
+    this.loadingPdf = true;
+    const inicio = new Date(this.fechaInicio).toISOString();
+    const fin = new Date(this.fechaFin + 'T23:59:59').toISOString();
+    const url = `http://localhost:8080/api/v1/reportes/exportar-pdf?inicio=${inicio}&fin=${fin}`;
+
+    this.http.get(url, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        this.loadingPdf = false;
+        const _url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = _url;
+        a.download = 'reporte_ventas.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(_url);
+        this.toast.success('Reporte descargado correctamente');
+      },
+      error: (err) => {
+        this.loadingPdf = false;
+        this.toast.error('Error al generar el PDF');
+      }
     });
   }
 

@@ -87,7 +87,7 @@ export class AdminPedidosComponent implements OnInit {
         this.applyFilter();
         this.toast.success(`Pedido #${p.id} → ${estado}`);
       },
-      error: (err: any) => this.toast.error('Error al cambiar estado')
+      error: (err: any) => this.toast.error(err?.error?.mensaje || 'Error al cambiar estado')
     });
   }
 

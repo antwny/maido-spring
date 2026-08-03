@@ -1,6 +1,8 @@
 package com.maido.app.service.impl;
 
 import com.maido.app.entity.Platillo;
+import com.maido.app.exception.FileUploadException;
+import com.maido.app.exception.ResourceNotFoundException;
 import com.maido.app.repository.PlatilloRepository;
 import com.maido.app.service.PlatilloService;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +64,7 @@ public class PlatilloServiceImpl implements PlatilloService {
                 p.setImagenUrl(datos.getImagenUrl());
             }
             return platilloRepository.save(p);
-        }).orElseThrow(() -> new RuntimeException("Platillo no encontrado con id: " + id));
+        }).orElseThrow(() -> new ResourceNotFoundException("Platillo", id));
     }
 
     @Override
@@ -80,7 +82,7 @@ public class PlatilloServiceImpl implements PlatilloService {
                     .path(filename)
                     .toUriString();
         } catch (IOException e) {
-            throw new RuntimeException("Error al subir la imagen: " + e.getMessage());
+            throw new FileUploadException("Error al subir la imagen", e);
         }
     }
 
