@@ -27,8 +27,9 @@
 ### 🛒 Módulo Público (Cliente)
 - **Catálogo interactivo** con búsqueda por nombre y filtro por categoría
 - **Carrito reactivo** persistente en `localStorage` con controles de cantidad
-- **Checkout** con simulación de métodos de pago (Efectivo, POS, Tarjeta de Crédito)
-- **Mis Pedidos** con timeline visual de progreso, filtros por estado, accordion expandible y badge de método de pago
+- **Checkout Premium** con simulación de métodos de pago, recibo digital animado y autocompletado de datos
+- **Mis Pedidos** con timeline visual, opción de **Repetir Pedido**, miniaturas de platillos y skeleton loaders
+- **Mi Perfil** para actualización de datos personales (teléfono, dirección)
 - **Autenticación** con registro de clientes y login con credenciales
 
 ### 🔧 Módulo Administrativo
@@ -64,7 +65,7 @@ MaidoSpring/
 │       ├── core/                  ← Models, Services, Guards
 │       ├── shared/                ← Navbar, Footer, Toast
 │       └── components/
-│           ├── public/            ← Home, Catálogo, Carrito, Checkout, Mis Pedidos
+│           ├── public/            ← Home, Catálogo, Carrito, Checkout, Mis Pedidos, Perfil
 │           └── admin/             ← Dashboard, Platillos, Pedidos, Reportes
 │
 └── maido_summary.md               ← Documentación técnica interna
@@ -136,6 +137,7 @@ La aplicación estará disponible en **http://localhost:4200**
 |--------|------|-------------|
 | `POST` | `/api/v1/auth/login` | Iniciar sesión |
 | `POST` | `/api/v1/auth/register` | Registrar nuevo cliente |
+| `PUT` | `/api/v1/auth/perfil/{id}` | Actualizar datos del perfil |
 
 ### Categorías
 | Método | Ruta | Descripción |
@@ -184,6 +186,7 @@ La aplicación estará disponible en **http://localhost:4200**
 | `/register` | `guestGuard` | Registro de clientes |
 | `/checkout` | `authGuard` | Confirmar pedido |
 | `/mis-pedidos` | `authGuard` | Historial de pedidos del cliente |
+| `/perfil` | `authGuard` | Actualización de datos del usuario |
 | `/admin/dashboard` | `adminGuard` | Panel de administración |
 | `/admin/platillos` | `adminGuard` | CRUD de platillos |
 | `/admin/pedidos` | `adminGuard` | Gestión de pedidos |

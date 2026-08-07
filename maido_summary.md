@@ -56,6 +56,7 @@ maido-backend/src/main/java/com/maido/app/
 |-------|--------|------|-------------|
 | Auth | POST | `/api/v1/auth/login` | Login con BCrypt |
 | Auth | POST | `/api/v1/auth/register` | Registro cliente |
+| Auth | PUT | `/api/v1/auth/perfil/{id}` | Actualizar perfil |
 | Categorías | GET/POST/PUT/DELETE | `/api/v1/categorias/**` | CRUD categorías |
 | Platillos | GET/POST/PUT/DELETE | `/api/v1/platillos/**` | CRUD platillos + upload imagen |
 | Pedidos | POST | `/api/v1/pedidos` | Crear pedido (@Transactional) |
@@ -106,7 +107,8 @@ maido-frontend/src/app/
     │   ├── register/                 ← Registro de clientes
     │   ├── carrito/                  ← Carrito con quantity controls
     │   ├── checkout/                 ← Confirmar pedido transaccional
-    │   └── mis-pedidos/              ← Historial de pedidos del cliente
+    │   ├── mis-pedidos/              ← Historial de pedidos del cliente
+    │   └── perfil/                   ← Actualizar datos del usuario
     └── admin/
         ├── admin-layout.component.ts ← Sidebar + router-outlet
         ├── dashboard/                ← KPIs + últimos pedidos
@@ -125,6 +127,7 @@ maido-frontend/src/app/
 | `/register` | guestGuard | RegisterComponent |
 | `/checkout` | authGuard | CheckoutComponent |
 | `/mis-pedidos` | authGuard | MisPedidosComponent |
+| `/perfil` | authGuard | PerfilComponent |
 | `/admin/dashboard` | adminGuard | AdminDashboardComponent |
 | `/admin/platillos` | adminGuard | AdminPlatillosComponent |
 | `/admin/pedidos` | adminGuard | AdminPedidosComponent |
@@ -175,3 +178,5 @@ PENDIENTE → EN_PREPARACION → EN_CAMINO → ENTREGADO
 | 2026-08-03 | Animaciones de ruta (Page Transitions): fade+slide suave entre páginas con Angular Animations, provideAnimationsAsync, y ChildrenOutletContexts |
 | 2026-08-03 | Rediseño completo de Mis Pedidos: timeline visual de progreso, accordion expandible, filtros por estado, badge de método de pago, observaciones visibles, y empty state mejorado |
 | 2026-08-03 | Generación de Reportes PDF con JasperReports en el backend: plantilla JRXML con estética Maido (colores dorados/oscuros), endpoint `/exportar-pdf`, y botón en el frontend para descargar el documento con el resumen y listado de pedidos |
+| 2026-08-06 | UX/UI Premium: Skeleton loaders en Home, Dashboard y Mis Pedidos; rediseño de notificaciones Toasts; Checkout con simulador de tarjeta glassmorphism; micro-animaciones (hovers, fade-ins). |
+| 2026-08-06 | Módulo Perfil: Funcionalidad para que el cliente actualice su teléfono y dirección, auto-completándose en el Checkout. Funcionalidad "Repetir Pedido" agregada al historial. |
