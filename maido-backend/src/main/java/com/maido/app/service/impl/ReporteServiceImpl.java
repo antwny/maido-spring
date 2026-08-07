@@ -31,7 +31,7 @@ public class ReporteServiceImpl implements ReporteService {
     @Override
     public byte[] generarReporteVentasPdf(LocalDateTime inicio, LocalDateTime fin) {
         try {
-            // 1. Obtener datos
+            
             List<Pedido> pedidos = pedidoRepository.findByFechaPedidoBetweenOrderByFechaPedidoDesc(inicio, fin);
             
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -55,22 +55,22 @@ public class ReporteServiceImpl implements ReporteService {
                 }
             }
 
-            // 2. Cargar plantilla JRXML
+            
             InputStream reportStream = new ClassPathResource("reports/reporte_ventas.jrxml").getInputStream();
             JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
 
-            // 3. Parámetros del reporte
+            
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("fechaInicio", inicio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             parameters.put("fechaFin", fin.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             parameters.put("totalVentas", "S/ " + totalVentas.toString());
             parameters.put("cantidadPedidos", String.valueOf(pedidos.size()));
             
-            // 4. Llenar reporte
+            
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(detalles);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
-            // 5. Exportar a PDF (byte array)
+            
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
         } catch (Exception e) {

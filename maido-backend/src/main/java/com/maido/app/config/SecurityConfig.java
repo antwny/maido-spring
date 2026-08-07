@@ -33,7 +33,7 @@ public class SecurityConfig {
                     "/uploads/**",
                     "/error"
                 ).permitAll()
-                // Todo lo demás requiere autenticación
+                
                 .anyRequest().permitAll()
             );
 

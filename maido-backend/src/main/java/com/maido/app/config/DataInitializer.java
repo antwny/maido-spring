@@ -13,10 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
-/**
- * Inicializa datos de prueba al arrancar la aplicación (solo si la BD está vacía).
- * Crea: 1 admin, 1 cliente de prueba, categorías Nikkei y platillos de ejemplo.
- */
 @Component
 @RequiredArgsConstructor
 @Slf4j
