@@ -80,4 +80,26 @@ public class AuthServiceImpl implements AuthService {
                 .mensaje("Registro exitoso. Bienvenido a Maido!")
                 .build();
     }
+
+    @Override
+    public LoginResponse updateProfile(Long id, com.maido.app.dto.UsuarioUpdateRequest request) {
+        return usuarioRepository.findById(id).map(u -> {
+            u.setNombre(request.getNombre());
+            u.setApellido(request.getApellido());
+            u.setTelefono(request.getTelefono());
+            u.setDireccion(request.getDireccion());
+            Usuario guardado = usuarioRepository.save(u);
+            return LoginResponse.builder()
+                    .id(guardado.getId())
+                    .nombre(guardado.getNombre())
+                    .apellido(guardado.getApellido())
+                    .email(guardado.getEmail())
+                    .rol(guardado.getRol())
+                    .direccion(guardado.getDireccion())
+                    .telefono(guardado.getTelefono())
+                    .autenticado(true)
+                    .mensaje("Perfil actualizado exitosamente")
+                    .build();
+        }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
 }

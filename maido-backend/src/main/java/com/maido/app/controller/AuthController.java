@@ -34,4 +34,10 @@ public class AuthController {
         }
         return ResponseEntity.status(400).body(response);
     }
+
+    @PutMapping("/perfil/{id}")
+    public ResponseEntity<LoginResponse> updateProfile(@PathVariable Long id, @Valid @RequestBody com.maido.app.dto.UsuarioUpdateRequest request) {
+        LoginResponse response = authService.updateProfile(id, request);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -8,6 +8,7 @@ export const routes: Routes = [
   { path: 'carrito', loadComponent: () => import('./components/public/carrito/carrito.component').then(m => m.CarritoComponent) },
   { path: 'checkout', canActivate: [authGuard], loadComponent: () => import('./components/public/checkout/checkout.component').then(m => m.CheckoutComponent) },
   { path: 'mis-pedidos', canActivate: [authGuard], loadComponent: () => import('./components/public/mis-pedidos/mis-pedidos.component').then(m => m.MisPedidosComponent) },
+  { path: 'perfil', canActivate: [authGuard], loadComponent: () => import('./components/public/perfil/perfil.component').then(m => m.PerfilComponent) },
 
   // Auth (solo invitados)
   { path: 'login', canActivate: [guestGuard], loadComponent: () => import('./components/public/login/login.component').then(m => m.LoginComponent) },

@@ -16,4 +16,8 @@ export class AuthService {
   register(body: RegisterRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.base}/register`, body);
   }
+
+  updateProfile(id: number, body: any): Observable<LoginResponse> {
+    return this.http.put<LoginResponse>(`${this.base}/perfil/${id}`, body);
+  }
 }
