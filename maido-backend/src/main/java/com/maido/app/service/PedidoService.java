@@ -10,8 +10,9 @@ import org.springframework.data.domain.Pageable;
 public interface PedidoService {
     PedidoResponse crearPedido(PedidoRequest request);
     List<PedidoResponse> listarTodos();
-    Page<PedidoResponse> listarTodosPaginado(String estado, Pageable pageable);
+    Page<PedidoResponse> listarTodosPaginado(String estado, LocalDateTime inicio, LocalDateTime fin, Pageable pageable);
     java.util.Map<String, Long> obtenerConteosPorEstado();
+    com.maido.app.dto.DashboardStatsResponse obtenerEstadisticasDashboard();
     List<PedidoResponse> listarPorUsuario(Long usuarioId);
     List<PedidoResponse> listarPorEstado(String estado);
     List<PedidoResponse> listarPorRangoDeFecha(LocalDateTime inicio, LocalDateTime fin);

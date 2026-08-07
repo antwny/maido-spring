@@ -48,14 +48,21 @@ public class PedidoController {
     @GetMapping("/page")
     public ResponseEntity<Page<PedidoResponse>> listarPaginado(
             @RequestParam(required = false) String estado,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(pedidoService.listarTodosPaginado(estado, PageRequest.of(page, size)));
+        return ResponseEntity.ok(pedidoService.listarTodosPaginado(estado, inicio, fin, PageRequest.of(page, size)));
     }
 
     @GetMapping("/counts")
     public ResponseEntity<Map<String, Long>> obtenerConteos() {
         return ResponseEntity.ok(pedidoService.obtenerConteosPorEstado());
+    }
+
+    @GetMapping("/dashboard-stats")
+    public ResponseEntity<com.maido.app.dto.DashboardStatsResponse> obtenerEstadisticasDashboard() {
+        return ResponseEntity.ok(pedidoService.obtenerEstadisticasDashboard());
     }
 
     @GetMapping("/{id}")

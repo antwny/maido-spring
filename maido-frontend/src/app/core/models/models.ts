@@ -98,3 +98,18 @@ export interface Page<T> {
   size: number;
   number: number;
 }
+
+export interface DashboardStats {
+  ingresosHoy: number;
+  ingresosTotales: number;
+  pedidosHoy: number;
+  pedidosActivos: number;
+  platillosAgotados: number;
+}
+
+export interface ReporteResumen {
+  ingresos: number;
+  totalPedidos: number;
+  entregados: number;
+  cancelados: number;
+}

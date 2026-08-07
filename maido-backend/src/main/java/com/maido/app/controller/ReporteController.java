@@ -33,4 +33,11 @@ public class ReporteController {
                 .headers(headers)
                 .body(pdfBytes);
     }
+
+    @GetMapping("/resumen")
+    public ResponseEntity<com.maido.app.dto.ReporteResumenResponse> obtenerResumen(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
+        return ResponseEntity.ok(reporteService.obtenerResumen(inicio, fin));
+    }
 }

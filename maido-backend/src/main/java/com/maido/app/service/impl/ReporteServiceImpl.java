@@ -78,6 +78,21 @@ public class ReporteServiceImpl implements ReporteService {
         }
     }
 
+    @Override
+    public com.maido.app.dto.ReporteResumenResponse obtenerResumen(LocalDateTime inicio, LocalDateTime fin) {
+        BigDecimal ingresos = pedidoRepository.sumIngresosPorRango(inicio, fin);
+        long totalPedidos = pedidoRepository.countByFechaPedidoBetween(inicio, fin);
+        long entregados = pedidoRepository.countByFechaPedidoBetweenAndEstado(inicio, fin, "ENTREGADO");
+        long cancelados = pedidoRepository.countByFechaPedidoBetweenAndEstado(inicio, fin, "CANCELADO");
+
+        return com.maido.app.dto.ReporteResumenResponse.builder()
+                .ingresos(ingresos != null ? ingresos : BigDecimal.ZERO)
+                .totalPedidos(totalPedidos)
+                .entregados(entregados)
+                .cancelados(cancelados)
+                .build();
+    }
+
     private String extraerMetodoPago(String observaciones) {
         if (observaciones == null || observaciones.isEmpty()) return "N/A";
         Pattern pattern = Pattern.compile("^\\[(.*?)\\]");

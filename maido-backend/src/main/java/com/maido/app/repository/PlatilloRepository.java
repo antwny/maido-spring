@@ -14,4 +14,5 @@ public interface PlatilloRepository extends JpaRepository<Platillo, Long> {
     List<Platillo> findByNombreContainingIgnoreCaseAndActivoTrue(String nombre);
     Page<Platillo> findByActivoTrue(Pageable pageable);
     Page<Platillo> findAllByOrderByActivoDescNombreAsc(Pageable pageable);
+    long countByActivoTrueAndDisponibleFalse();
 }

@@ -79,9 +79,11 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public Page<PedidoResponse> listarTodosPaginado(String estado, Pageable pageable) {
+    public Page<PedidoResponse> listarTodosPaginado(String estado, LocalDateTime inicio, LocalDateTime fin, Pageable pageable) {
         Page<Pedido> pedidos;
-        if (estado != null && !estado.isEmpty()) {
+        if (inicio != null && fin != null) {
+            pedidos = pedidoRepository.findByFechaPedidoBetweenOrderByFechaPedidoDesc(inicio, fin, pageable);
+        } else if (estado != null && !estado.isEmpty()) {
             pedidos = pedidoRepository.findByEstadoOrderByFechaPedidoDesc(estado, pageable);
         } else {
             pedidos = pedidoRepository.findAllByOrderByFechaPedidoDesc(pageable);
@@ -99,6 +101,27 @@ public class PedidoServiceImpl implements PedidoService {
         conteos.put("ENTREGADO", pedidoRepository.countByEstado("ENTREGADO"));
         conteos.put("CANCELADO", pedidoRepository.countByEstado("CANCELADO"));
         return conteos;
+    }
+
+    @Override
+    public com.maido.app.dto.DashboardStatsResponse obtenerEstadisticasDashboard() {
+        LocalDateTime inicioDia = LocalDateTime.now().with(java.time.LocalTime.MIN);
+        LocalDateTime finDia = LocalDateTime.now().with(java.time.LocalTime.MAX);
+        
+        java.math.BigDecimal ingresosHoy = pedidoRepository.sumIngresosPorRango(inicioDia, finDia);
+        java.math.BigDecimal ingresosTotales = pedidoRepository.sumIngresosTotales();
+        
+        long pedidosHoy = pedidoRepository.countByFechaPedidoBetween(inicioDia, finDia);
+        long pedidosActivos = pedidoRepository.countByEstadoIn(java.util.Arrays.asList("PENDIENTE", "EN_PREPARACION", "EN_CAMINO"));
+        long platillosAgotados = platilloRepository.countByActivoTrueAndDisponibleFalse();
+
+        return com.maido.app.dto.DashboardStatsResponse.builder()
+                .ingresosHoy(ingresosHoy != null ? ingresosHoy : java.math.BigDecimal.ZERO)
+                .ingresosTotales(ingresosTotales != null ? ingresosTotales : java.math.BigDecimal.ZERO)
+                .pedidosHoy(pedidosHoy)
+                .pedidosActivos(pedidosActivos)
+                .platillosAgotados(platillosAgotados)
+                .build();
     }
 
     @Override

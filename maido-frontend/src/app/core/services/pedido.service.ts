@@ -22,14 +22,20 @@ export class PedidoService {
     return this.http.get<PedidoResponse[]>(this.base, { params: p });
   }
 
-  getPage(page: number, size: number, estado?: string): Observable<Page<PedidoResponse>> {
+  getPage(page: number, size: number, estado?: string, inicio?: string, fin?: string): Observable<Page<PedidoResponse>> {
     let params = new HttpParams().set('page', page).set('size', size);
     if (estado && estado !== 'TODOS') params = params.set('estado', estado);
+    if (inicio) params = params.set('inicio', inicio);
+    if (fin) params = params.set('fin', fin);
     return this.http.get<Page<PedidoResponse>>(`${this.base}/page`, { params });
   }
 
   getCounts(): Observable<Record<string, number>> {
     return this.http.get<Record<string, number>>(`${this.base}/counts`);
+  }
+
+  getDashboardStats(): Observable<import('../models/models').DashboardStats> {
+    return this.http.get<import('../models/models').DashboardStats>(`${this.base}/dashboard-stats`);
   }
 
   getById(id: number): Observable<PedidoResponse> {
