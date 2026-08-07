@@ -2,6 +2,12 @@ package com.maido.app.dto;
 
 import lombok.*;
 
+/**
+ * Patrón DTO (Data Transfer Object) para respuestas (Response).
+ * Cuando el login es exitoso, retornamos este objeto.
+ * Fíjate cómo NO enviamos el "password" de vuelta al cliente. Si retornáramos 
+ * la Entidad Usuario completa, estaríamos enviando el hash de la contraseña por la red (muy peligroso).
+ */
 @Data
 @Builder
 @NoArgsConstructor

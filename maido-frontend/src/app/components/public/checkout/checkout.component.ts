@@ -340,9 +340,17 @@ export class CheckoutComponent implements OnInit {
     return !!(c?.invalid && c?.touched); 
   }
 
+  /**
+   * Flujo de Checkout (Sustentación):
+   * 1. Validamos que el formulario HTML (Reactive Forms) sea correcto.
+   * 2. Recuperamos el carrito y el usuario activo.
+   * 3. Transformamos (mapeamos) los datos del frontend al DTO (PedidoRequest)
+   *    exactamente como el Backend (Spring Boot) lo espera recibir en JSON.
+   * 4. Hacemos la petición HTTP POST asíncrona mediante el PedidoService.
+   */
   onSubmit(): void {
     if (this.form.invalid) { 
-      this.form.markAllAsTouched(); 
+      this.form.markAllAsTouched(); // Muestra mensajes de error en rojo
       return; 
     }
     
@@ -362,6 +370,7 @@ export class CheckoutComponent implements OnInit {
     // Agregamos el teléfono y método de pago al inicio de las observaciones para que el admin lo vea
     finalObs = `[Pago: ${pagoText}] [Tel: ${tel}] ${finalObs}`;
 
+    // Payload = El JSON que viajará por la red hacia el Spring Boot (Coincide con PedidoRequest.java)
     const payload = {
       usuarioId: user.id,
       direccionEntrega: this.form.value.direccionEntrega!,
@@ -373,6 +382,7 @@ export class CheckoutComponent implements OnInit {
       }))
     };
 
+    // Llamada HTTP POST real. Como es asíncrono, usamos .subscribe()
     this.pedidoSvc.create(payload).subscribe({
       next: (res: any) => {
         this.loading = false;

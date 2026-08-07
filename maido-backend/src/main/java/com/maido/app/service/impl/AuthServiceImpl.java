@@ -10,17 +10,35 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * 🎓 EXPLICACIÓN PARA EL ESTUDIANTE:
+ * Esta clase es la Implementación ("CÓMO") de la interfaz AuthService.
+ *
+ * @Service: Esta anotación le dice a Spring Boot que esta clase es un Bean de Servicio.
+ * Spring la instanciará automáticamente y la guardará en su "Contenedor de Inversión de Control (IoC)".
+ * 
+ * @RequiredArgsConstructor: Es una anotación de Lombok que crea automáticamente un constructor
+ * con todos los atributos marcados como 'final'. Esto se usa para la Inyección de Dependencias
+ * por Constructor, la cual es la práctica más recomendada en Spring moderna (mejor que usar @Autowired 
+ * en las variables), porque facilita el testing y asegura que las dependencias no sean nulas.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    // Dependencias inyectadas por el constructor generado por @RequiredArgsConstructor
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public LoginResponse login(LoginRequest request) {
+        // Uso de Optional y Lambdas (Java 8+)
+        // findByEmail retorna un Optional<Usuario>
         return usuarioRepository.findByEmail(request.getEmail())
+                // .filter() recibe un Predicate (una lambda que devuelve boolean). 
+                // Sólo deja pasar si el usuario está activo.
                 .filter(u -> u.getActivo())
+                // .map() transforma el contenido del Optional. Recibe el usuario, y lo transforma a un LoginResponse.
                 .map(u -> {
                     if (passwordEncoder.matches(request.getPassword(), u.getPassword())) {
                         return LoginResponse.builder()
@@ -40,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
                             .mensaje("Credenciales inválidas")
                             .build();
                 })
+                // .orElse() se ejecuta si el Optional está vacío (ej. el usuario no existe o no estaba activo).
                 .orElse(LoginResponse.builder()
                         .autenticado(false)
                         .mensaje("Usuario no encontrado")
@@ -100,6 +119,8 @@ public class AuthServiceImpl implements AuthService {
                     .autenticado(true)
                     .mensaje("Perfil actualizado exitosamente")
                     .build();
+        // .orElseThrow() es muy útil: extrae el valor del Optional si existe, 
+        // pero si está vacío, lanza inmediatamente la excepción que le digamos.
         }).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 }

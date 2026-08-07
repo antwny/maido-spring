@@ -7,6 +7,14 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * 🎓 EXPLICACIÓN PARA EL ESTUDIANTE:
+ * Interfaz PedidoService. Contrato para el dominio de Pedidos.
+ * Aquí vemos cómo los métodos devuelven "DTOs" (Data Transfer Objects) como PedidoResponse
+ * en lugar de la Entidad directa. Esto es un patrón de diseño excelente porque protege 
+ * la base de datos de exponer campos internos (como contraseñas en Usuarios) y adapta 
+ * los datos exactamente a lo que necesita la vista/frontend.
+ */
 public interface PedidoService {
     PedidoResponse crearPedido(PedidoRequest request);
     List<PedidoResponse> listarTodos();

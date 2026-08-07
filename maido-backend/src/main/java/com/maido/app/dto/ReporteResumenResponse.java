@@ -6,6 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
+/**
+ * Patrón DTO.
+ * Envuelve datos agregados o procesados (totales, recuentos).
+ * Nunca verás una tabla llamada "ReporteResumenResponse" en la base de datos, 
+ * esto es puramente para dar respuesta a un requerimiento de la interfaz gráfica.
+ */
 @Data
 @Builder
 @NoArgsConstructor

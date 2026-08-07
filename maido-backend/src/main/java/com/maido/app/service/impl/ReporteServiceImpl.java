@@ -22,6 +22,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * 🎓 EXPLICACIÓN PARA EL ESTUDIANTE:
+ * @Service para la lógica de generación de reportes (JasperReports en este caso).
+ * @RequiredArgsConstructor para inyección de dependencia por constructor.
+ */
 @Service
 @RequiredArgsConstructor
 public class ReporteServiceImpl implements ReporteService {
@@ -31,12 +36,13 @@ public class ReporteServiceImpl implements ReporteService {
     @Override
     public byte[] generarReporteVentasPdf(LocalDateTime inicio, LocalDateTime fin) {
         try {
-            
             List<Pedido> pedidos = pedidoRepository.findByFechaPedidoBetweenOrderByFechaPedidoDesc(inicio, fin);
             
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             BigDecimal totalVentas = BigDecimal.ZERO;
 
+            // 🎓 STREAMS y LAMBDAS
+            // Se transforma la Lista de 'Pedido' a una Lista de 'DetalleReporte' de forma declarativa.
             List<DetalleReporte> detalles = pedidos.stream().map(p -> {
                 String metodoPago = extraerMetodoPago(p.getObservaciones());
                 return DetalleReporte.builder()
@@ -47,7 +53,7 @@ public class ReporteServiceImpl implements ReporteService {
                         .estado(p.getEstado())
                         .total(p.getTotal())
                         .build();
-            }).collect(Collectors.toList());
+            }).collect(Collectors.toList()); // collect re-empaqueta el Stream en una Lista
 
             for (DetalleReporte d : detalles) {
                 if (!"CANCELADO".equals(d.getEstado())) {
@@ -55,22 +61,18 @@ public class ReporteServiceImpl implements ReporteService {
                 }
             }
 
-            
             InputStream reportStream = new ClassPathResource("reports/reporte_ventas.jrxml").getInputStream();
             JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
 
-            
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("fechaInicio", inicio.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             parameters.put("fechaFin", fin.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             parameters.put("totalVentas", "S/ " + totalVentas.toString());
             parameters.put("cantidadPedidos", String.valueOf(pedidos.size()));
             
-            
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(detalles);
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
-            
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
         } catch (Exception e) {

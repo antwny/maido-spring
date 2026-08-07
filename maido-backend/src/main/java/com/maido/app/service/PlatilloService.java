@@ -7,6 +7,15 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * 🎓 EXPLICACIÓN PARA EL ESTUDIANTE:
+ * Interfaz PlatilloService. Contrato para la lógica de negocio de Platillos.
+ * 
+ * En la arquitectura por capas (Controlador -> Servicio -> Repositorio):
+ * Esta interfaz asegura que el Controlador no tenga que lidiar con la base de datos.
+ * El Controlador solo llama a 'subirImagen' o 'listarTodos' y no le importa si los 
+ * datos vienen de MySQL, MongoDB, o un archivo de texto.
+ */
 public interface PlatilloService {
     List<Platillo> listarTodos();
     Page<Platillo> listarTodosPaginado(Pageable pageable);

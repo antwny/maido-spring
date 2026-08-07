@@ -20,12 +20,18 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * 🎓 EXPLICACIÓN PARA EL ESTUDIANTE:
+ * @Service y @RequiredArgsConstructor nuevamente.
+ * Esto maneja la lógica de negocio para crear, buscar y subir imágenes de Platillos.
+ */
 @Service
 @RequiredArgsConstructor
 public class PlatilloServiceImpl implements PlatilloService {
 
     private final PlatilloRepository platilloRepository;
 
+    // Inyectando valores del archivo application.properties/yml
     @Value("${app.upload.dir:uploads/}")
     private String uploadDir;
 
@@ -61,6 +67,7 @@ public class PlatilloServiceImpl implements PlatilloService {
 
     @Override
     public Platillo actualizar(Long id, Platillo datos) {
+        // Uso de Optional.map().orElseThrow() para una actualización limpia.
         return platilloRepository.findById(id).map(p -> {
             p.setNombre(datos.getNombre());
             p.setDescripcion(datos.getDescripcion());

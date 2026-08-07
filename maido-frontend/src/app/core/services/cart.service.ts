@@ -2,6 +2,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CartItem, Platillo } from '../models/models';
 
+/**
+ * CartService maneja el estado global del carrito de compras.
+ * 
+ * Concepto Clave para Sustentación: RxJS y BehaviorSubject.
+ * Usamos BehaviorSubject porque nos permite mantener el "estado actual" de los items
+ * y notificar automáticamente a cualquier componente (ej. Navbar, Checkout) 
+ * cuando algo cambia (como agregar un platillo), sin necesidad de recargar la página.
+ */
 @Injectable({ providedIn: 'root' })
 export class CartService {
   private itemsSubject = new BehaviorSubject<CartItem[]>(this.loadCart());

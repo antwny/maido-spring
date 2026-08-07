@@ -13,11 +13,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
+/**
+ * ¡El Inicializador de Datos! 🚀
+ * 
+ * Al implementar 'CommandLineRunner', Spring ejecutará automáticamente el método 'run()' 
+ * justo después de que la aplicación haya arrancado por completo.
+ * Esto es súper útil para insertar datos de prueba o iniciales en la base de datos (Semillas/Seeds).
+ */
 @Component
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j // Anotación de Lombok para habilitar el registro de logs (log.info, etc.)
 public class DataInitializer implements CommandLineRunner {
 
+    // Inyectamos nuestros repositorios. Gracias a @RequiredArgsConstructor (de Lombok)
+    // Spring genera un constructor automáticamente y hace la inyección de dependencias.
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
     private final PlatilloRepository platilloRepository;
@@ -32,11 +41,13 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initUsuarios() {
+        // Solo guardamos usuarios si la tabla está vacía
         if (usuarioRepository.count() == 0) {
             usuarioRepository.save(Usuario.builder()
                     .nombre("Admin")
                     .apellido("Maido")
                     .email("admin@maido.pe")
+                    // ¡Nunca guardes contraseñas en texto plano! Usamos el encoder aquí.
                     .password(passwordEncoder.encode("admin123"))
                     .telefono("999000001")
                     .direccion("Av. La Mar 700, Miraflores")

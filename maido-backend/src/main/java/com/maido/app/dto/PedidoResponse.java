@@ -5,6 +5,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Patrón DTO (Data Transfer Object).
+ * Representa la respuesta de un pedido para que el frontend la consuma.
+ * En vez de mandar el objeto completo "Usuario" o "Platillo" (que traería más datos irrelevantes),
+ * solo enviamos "usuarioNombre", "platilloNombre", etc., para mantener el payload JSON ligero y seguro.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

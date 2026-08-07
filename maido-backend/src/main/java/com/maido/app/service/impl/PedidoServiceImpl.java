@@ -22,20 +22,36 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * 🎓 EXPLICACIÓN PARA EL ESTUDIANTE:
+ * @Service define la lógica core para manejar Pedidos.
+ * @RequiredArgsConstructor inyecta automáticamente los repositorios a través del constructor.
+ */
 @Service
 @RequiredArgsConstructor
 public class PedidoServiceImpl implements PedidoService {
 
+    // Múltiples dependencias inyectadas, todas requeridas y declaradas final.
     private final PedidoRepository pedidoRepository;
     private final UsuarioRepository usuarioRepository;
     private final PlatilloRepository platilloRepository;
 
+    /**
+     * Crea un nuevo pedido en la base de datos.
+     * 
+     * 🎓 @Transactional es CRÍTICO aquí: Si algo falla a la mitad del método 
+     * (por ejemplo, el platillo no existe y lanza una excepción), Spring Boot 
+     * hace un "Rollback" automático. Es decir, deshace cualquier cambio previo 
+     * en la base de datos para evitar que se guarde un pedido a medias (datos corruptos).
+     */
     @Override
     @Transactional
     public PedidoResponse crearPedido(PedidoRequest request) {
+        // 1. Buscamos al usuario. orElseThrow desenvuelve el Optional o lanza excepción.
         Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario", request.getUsuarioId()));
 
+        // 2. Patrón Builder (Lombok) para construir el objeto sin un constructor kilométrico.
         Pedido pedido = Pedido.builder()
                 .usuario(usuario)
                 .fechaPedido(LocalDateTime.now())
@@ -52,6 +68,7 @@ public class PedidoServiceImpl implements PedidoService {
             Platillo platillo = platilloRepository.findById(dr.getPlatilloId())
                     .orElseThrow(() -> new ResourceNotFoundException("Platillo", dr.getPlatilloId()));
 
+            // Uso de BigDecimal para dinero. Nunca uses double/float para monedas por problemas de precisión.
             BigDecimal subtotal = dr.getPrecioUnitario().multiply(BigDecimal.valueOf(dr.getCantidad()));
             total = total.add(subtotal);
 
@@ -69,11 +86,16 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setDetalles(detalles);
 
         Pedido guardado = pedidoRepository.save(pedido);
+        
         return mapToResponse(guardado);
     }
 
     @Override
     public List<PedidoResponse> listarTodos() {
+        // 🎓 STREAMS y LAMBDAS:
+        // .stream() convierte la lista a un flujo de datos.
+        // .map() aplica la función 'mapToResponse' (usando Method Reference this::mapToResponse) a cada elemento.
+        // .collect(Collectors.toList()) junta todos los resultados transformados en una nueva Lista.
         return pedidoRepository.findAllByOrderByFechaPedidoDesc()
                 .stream().map(this::mapToResponse).collect(Collectors.toList());
     }
@@ -88,6 +110,7 @@ public class PedidoServiceImpl implements PedidoService {
         } else {
             pedidos = pedidoRepository.findAllByOrderByFechaPedidoDesc(pageable);
         }
+        // Page.map() funciona igual que Stream.map(), transforma Entidades a DTOs dentro de la página.
         return pedidos.map(this::mapToResponse);
     }
 
@@ -153,12 +176,20 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public PedidoResponse obtenerPorId(Long id) {
+        // Uso elegante de Optional:
+        // findById -> Optional<Pedido>
+        // map -> transforma a Optional<PedidoResponse>
+        // orElseThrow -> devuelve PedidoResponse o explota si era nulo.
         return pedidoRepository.findById(id)
                 .map(this::mapToResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido", id));
     }
 
+    /**
+     * 🎓 Función de mapeo auxiliar. Convierte la Entidad a un DTO.
+     */
     private PedidoResponse mapToResponse(Pedido pedido) {
+        // Transformando la lista hija (detalles) a su respectivo DTO usando Streams y Lambdas.
         List<PedidoResponse.DetalleResponse> detallesResp = pedido.getDetalles().stream()
                 .map(d -> PedidoResponse.DetalleResponse.builder()
                             .platilloId(d.getPlatillo().getId())
