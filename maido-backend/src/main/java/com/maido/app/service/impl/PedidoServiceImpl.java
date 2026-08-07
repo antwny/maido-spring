@@ -79,9 +79,26 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public Page<PedidoResponse> listarTodosPaginado(Pageable pageable) {
-        return pedidoRepository.findAllByOrderByFechaPedidoDesc(pageable)
-                .map(this::mapToResponse);
+    public Page<PedidoResponse> listarTodosPaginado(String estado, Pageable pageable) {
+        Page<Pedido> pedidos;
+        if (estado != null && !estado.isEmpty()) {
+            pedidos = pedidoRepository.findByEstadoOrderByFechaPedidoDesc(estado, pageable);
+        } else {
+            pedidos = pedidoRepository.findAllByOrderByFechaPedidoDesc(pageable);
+        }
+        return pedidos.map(this::mapToResponse);
+    }
+
+    @Override
+    public java.util.Map<String, Long> obtenerConteosPorEstado() {
+        java.util.Map<String, Long> conteos = new java.util.HashMap<>();
+        conteos.put("TODOS", pedidoRepository.count());
+        conteos.put("PENDIENTE", pedidoRepository.countByEstado("PENDIENTE"));
+        conteos.put("EN_PREPARACION", pedidoRepository.countByEstado("EN_PREPARACION"));
+        conteos.put("EN_CAMINO", pedidoRepository.countByEstado("EN_CAMINO"));
+        conteos.put("ENTREGADO", pedidoRepository.countByEstado("ENTREGADO"));
+        conteos.put("CANCELADO", pedidoRepository.countByEstado("CANCELADO"));
+        return conteos;
     }
 
     @Override

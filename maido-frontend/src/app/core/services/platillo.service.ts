@@ -37,6 +37,19 @@ export class PlatilloService {
     return this.http.delete<void>(`${this.base}/${id}`);
   }
 
+  getAdminPage(page: number, size: number): Observable<Page<Platillo>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<Page<Platillo>>(`${this.base}/admin/page`, { params });
+  }
+
+  restore(id: number): Observable<Platillo> {
+    return this.http.put<Platillo>(`${this.base}/${id}/restaurar`, {});
+  }
+
+  toggleDisponible(id: number): Observable<Platillo> {
+    return this.http.put<Platillo>(`${this.base}/${id}/toggle-disponible`, {});
+  }
+
   uploadImage(file: File): Observable<string> {
     const fd = new FormData();
     fd.append('file', file);

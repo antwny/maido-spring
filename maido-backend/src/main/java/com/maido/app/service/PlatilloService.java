@@ -17,4 +17,7 @@ public interface PlatilloService {
     Platillo actualizar(Long id, Platillo platillo);
     String subirImagen(MultipartFile file);
     void eliminar(Long id);
+    Page<Platillo> listarTodosAdmin(Pageable pageable);
+    Platillo restaurar(Long id);
+    Platillo toggleDisponible(Long id);
 }

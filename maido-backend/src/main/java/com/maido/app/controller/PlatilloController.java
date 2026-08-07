@@ -45,6 +45,23 @@ public class PlatilloController {
         return ResponseEntity.ok(platilloService.listarTodosPaginado(PageRequest.of(page, size)));
     }
 
+    @GetMapping("/admin/page")
+    public ResponseEntity<Page<Platillo>> listarPaginadoAdmin(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(platilloService.listarTodosAdmin(PageRequest.of(page, size)));
+    }
+
+    @PutMapping("/{id}/restaurar")
+    public ResponseEntity<Platillo> restaurar(@PathVariable Long id) {
+        return ResponseEntity.ok(platilloService.restaurar(id));
+    }
+
+    @PutMapping("/{id}/toggle-disponible")
+    public ResponseEntity<Platillo> toggleDisponible(@PathVariable Long id) {
+        return ResponseEntity.ok(platilloService.toggleDisponible(id));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Platillo> obtenerPorId(@PathVariable Long id) {
         return platilloService.obtenerPorId(id)

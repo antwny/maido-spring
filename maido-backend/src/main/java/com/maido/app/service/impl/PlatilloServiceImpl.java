@@ -100,4 +100,25 @@ public class PlatilloServiceImpl implements PlatilloService {
             platilloRepository.save(p);
         });
     }
+
+    @Override
+    public Page<Platillo> listarTodosAdmin(Pageable pageable) {
+        return platilloRepository.findAllByOrderByActivoDescNombreAsc(pageable);
+    }
+
+    @Override
+    public Platillo restaurar(Long id) {
+        return platilloRepository.findById(id).map(p -> {
+            p.setActivo(true);
+            return platilloRepository.save(p);
+        }).orElseThrow(() -> new ResourceNotFoundException("Platillo", id));
+    }
+
+    @Override
+    public Platillo toggleDisponible(Long id) {
+        return platilloRepository.findById(id).map(p -> {
+            p.setDisponible(!p.getDisponible());
+            return platilloRepository.save(p);
+        }).orElseThrow(() -> new ResourceNotFoundException("Platillo", id));
+    }
 }

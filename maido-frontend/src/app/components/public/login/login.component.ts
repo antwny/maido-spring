@@ -49,12 +49,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <p class="text-muted">¿No tienes cuenta? <a routerLink="/register" [queryParamsHandling]="'preserve'" class="text-accent">Regístrate</a></p>
         </div>
 
-        <!-- Demo creds -->
-        <div class="demo-box">
-          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem">🧪 Credenciales de prueba:</p>
-          <button class="demo-btn" (click)="fillDemo('admin')">Admin: admin&#64;maido.pe / admin123</button>
-          <button class="demo-btn" (click)="fillDemo('cliente')">Cliente: kenji&#64;cliente.pe / cliente123</button>
-        </div>
+
       </div>
     </div>
   `,

@@ -47,9 +47,15 @@ public class PedidoController {
 
     @GetMapping("/page")
     public ResponseEntity<Page<PedidoResponse>> listarPaginado(
+            @RequestParam(required = false) String estado,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(pedidoService.listarTodosPaginado(PageRequest.of(page, size)));
+        return ResponseEntity.ok(pedidoService.listarTodosPaginado(estado, PageRequest.of(page, size)));
+    }
+
+    @GetMapping("/counts")
+    public ResponseEntity<Map<String, Long>> obtenerConteos() {
+        return ResponseEntity.ok(pedidoService.obtenerConteosPorEstado());
     }
 
     @GetMapping("/{id}")

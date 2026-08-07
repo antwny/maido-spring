@@ -15,4 +15,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByFechaPedidoBetweenOrderByFechaPedidoDesc(LocalDateTime inicio, LocalDateTime fin);
     List<Pedido> findAllByOrderByFechaPedidoDesc();
     Page<Pedido> findAllByOrderByFechaPedidoDesc(Pageable pageable);
+    Page<Pedido> findByEstadoOrderByFechaPedidoDesc(String estado, Pageable pageable);
+    long countByEstado(String estado);
 }
