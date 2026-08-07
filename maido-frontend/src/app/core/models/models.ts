@@ -69,6 +69,7 @@ export interface PedidoRequest {
 export interface DetalleResponse {
   platilloId: number;
   platilloNombre: string;
+  platilloImagenUrl?: string;
   cantidad: number;
   precioUnitario: number;
   subtotal: number;

@@ -15,7 +15,8 @@ import { Toast } from '../../core/services/toast.service';
            [class.toast-success]="t.type==='success'"
            [class.toast-error]="t.type==='error'"
            [class.toast-info]="t.type==='info'">
-        <span>{{ icon(t.type) }}</span> {{ t.message }}
+         <span style="font-size:1.2rem;line-height:1">{{ icon(t.type) }}</span> 
+         <span style="flex:1">{{ t.message }}</span>
       </div>
     </div>
   `

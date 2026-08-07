@@ -28,6 +28,7 @@ public class PedidoResponse {
     public static class DetalleResponse {
         private Long platilloId;
         private String platilloNombre;
+        private String platilloImagenUrl;
         private Integer cantidad;
         private BigDecimal precioUnitario;
         private BigDecimal subtotal;

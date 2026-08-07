@@ -161,9 +161,10 @@ public class PedidoServiceImpl implements PedidoService {
     private PedidoResponse mapToResponse(Pedido pedido) {
         List<PedidoResponse.DetalleResponse> detallesResp = pedido.getDetalles().stream()
                 .map(d -> PedidoResponse.DetalleResponse.builder()
-                        .platilloId(d.getPlatillo().getId())
-                        .platilloNombre(d.getPlatillo().getNombre())
-                        .cantidad(d.getCantidad())
+                            .platilloId(d.getPlatillo().getId())
+                            .platilloNombre(d.getPlatillo().getNombre())
+                            .platilloImagenUrl(d.getPlatillo().getImagenUrl())
+                            .cantidad(d.getCantidad())
                         .precioUnitario(d.getPrecioUnitario())
                         .subtotal(d.getSubtotal())
                         .build())
